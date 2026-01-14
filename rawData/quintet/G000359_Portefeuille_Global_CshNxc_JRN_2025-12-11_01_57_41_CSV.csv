@@ -1,0 +1,4 @@
+"Cash Non-Ledger Movements Details;;;;;;;;;;;;Account Details;;;;;"
+"Client ID;Transaction Reference;Operation Direction;Value Date;Operation Date;Quantity;Operation Currency;Operation Type Code;Transaction Description;Client Reference;Exchange Value (EUR);Exchange Value Rate;IBAN;KBL Cash Account Number;Client Name;Account Title;Account Type;Account currency"
+"K00149ED;KLXP2B25EBEAD671;DBR;2025-12-10;2025-12-08;-54.987,36;USD;STO;Souscription 388 AQR ALT UCITS IAU1;;-47.300,23;0.86;LU717050K00149ED0000;K00149ED;;WEALINS-FR037466-ARTHA FINANCE;CC;USD;"
+"K06899YP;KLXP2B25EBEAD69C;DBR;2025-12-10;2025-12-08;-91.125,96;USD;STO;Subscription 643 AQR ALT UCITS IAU1;;-78.386,72;0.86;LU217050K06899YP0000;K06899YP;;UL-PCP 43843 - INTGFD-ARTHA;CC;USD;"

@@ -1,0 +1,3 @@
+"Cash Non-Ledger Movements Details;;;;;;;;;;;;Account Details;;;;;"
+"Client ID;Transaction Reference;Operation Direction;Value Date;Operation Date;Quantity;Operation Currency;Operation Type Code;Transaction Description;Client Reference;Exchange Value (EUR);Exchange Value Rate;IBAN;KBL Cash Account Number;Client Name;Account Title;Account Type;Account currency"
+"K00149ED;KLXP2B25A2E4A31F;DBR;2025-09-03;2025-09-01;-70.700,00;EUR;STO;Souscription 707 MUZINICH EU PRI CR H EUR;;-70.700,00;1;LU717050K00149ED0000;K00149ED;;WEALINS-FR037466-ARTHA FINANCE;CC;EUR;"
