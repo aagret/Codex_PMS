@@ -1,0 +1,25 @@
+﻿CGD/C1179700 in EUR from 01.01.2023 to 31.03.2023,,,,,,,,,,
+Positions,,,,,,,,,,
+,,,,,,,,,,
+Cash,,,,,,,,,,
+Quantity,Description,ISIN,Currency,Last Price (QC),"Valuation
+(VC, End)",Weighting,MW Performance,Account Number,Telekurs Number,Asset Class Code
+50 409.50,ORDINARY ACCOUNT IN USD,,USD,1.09,46 400.45,1.37%,-4.29%,C1179700,,Cash
+Short-Term Instruments,,,,,,,,,,
+Quantity,Description,ISIN,Currency,Last Price (QC),"Valuation
+(VC, End)",Weighting,MW Performance,Account Number,Telekurs Number,Asset Class Code
+ 600 000.00,4.3% Fid. On Call BNP PARIBAS LUX CWAIVER CALL On Call No. 39745,,USD,1.09, 552 282.21,16.28%,-13.24%,C1179700,,Short-Term Instruments
+1 295 000.00,4.25% Fid. On Call ANZ London Préavis Waiver On Call No. 30872,,USD,1.09,1 192 009.10,35.14%,-0.85%,C1179700,,Short-Term Instruments
+Fixed Income,,,,,,,,,,
+Quantity,Description,ISIN,Currency,Last Price (QC),"Valuation
+(VC, End)",Weighting,MW Performance,Account Number,Telekurs Number,Asset Class Code
+7 678.73,DHARMARESEARCH DR GBL A,LU1901202363,EUR,94.78, 727 790.22,21.45%,-0.24%,C1179700,0444336850,Fixed Income
+9 826.72,LIONTRUST GF ABS RET A5,IE00BD85PG80,EUR,9.13,89 729.76,2.64%,-3.38%,C1179700,0421407470,Fixed Income
+Equities,,,,,,,,,,
+Quantity,Description,ISIN,Currency,Last Price (QC),"Valuation
+(VC, End)",Weighting,MW Performance,Account Number,Telekurs Number,Asset Class Code
+4 865.52,DHARMARESEARCH DR EQ A,LU1901202280,EUR,140.27, 682 487.05,20.12%,0.87%,C1179700,0444336750,Equities
+Other Investments,,,,,,,,,,
+Quantity,Description,ISIN,Currency,Last Price (QC),"Valuation
+(VC, End)",Weighting,MW Performance,Account Number,Telekurs Number,Asset Class Code
+1 045.81,MONTLAKE ALPHAQUEST INS €,IE00BD08G390,EUR,97.30, 101 752.88,3.00%,-9.37%,C1179700,0335314140,Other Investments
