@@ -1,4 +1,0 @@
-"Cash Non-Ledger Movements Details;;;;;;;;;;;;Account Details;;;;;"
-"Client ID;Transaction Reference;Operation Direction;Value Date;Operation Date;Quantity;Operation Currency;Operation Type Code;Transaction Description;Client Reference;Exchange Value (EUR);Exchange Value Rate;IBAN;KBL Cash Account Number;Client Name;Account Title;Account Type;Account currency"
-"K0084100;RED2502140001026_0;DBR;2025-02-18;2025-02-18;-581.389,82;EUR;CTF;Rachat R000000580021784;;-581.389,82;1;LU227050K00841000000;K0084100;;ESLENDING -DIRECT LENDING FUND;CC;EUR;"
-"K0085100;KLXP2V25246D3D56;DBR;2025-02-26;2025-02-25;-5.055,00;EUR;CTF;Transfer to ADMIN. CONTRIBUTIONS DIR.;;-5.055,00;1;LU077050K00851000000;K0085100;;ESLENDING SARL;CC;EUR;"

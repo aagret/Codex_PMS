@@ -1,4 +1,0 @@
-"Cash Non-Ledger Movements Details;;;;;;;;;;;;Account Details;;;;;"
-"Client ID;Transaction Reference;Operation Direction;Value Date;Operation Date;Quantity;Operation Currency;Operation Type Code;Transaction Description;Client Reference;Exchange Value (EUR);Exchange Value Rate;IBAN;KBL Cash Account Number;Client Name;Account Title;Account Type;Account currency"
-"K0124100;KLXNGBDD5F7KN5A9;DBR;2026-01-09;2026-01-08;-327.733,50;USD;STO;Buy Opening 3,000 S&P 500(W) PUT 6225 30JUN limited at USD 113 (BK5F5QUGR9);;-280.920,46;0.857;LU047050K01241000000;K0124100;;DHARMARESEARCH-DR EQUITY FUND;CC;USD;"
-"K0124100;KLXNGBCC5F5L3J28;DBR;2026-01-09;2026-01-08;-77.778,00;USD;STO;Buy Opening 4,000 S&P 500(W) PUT 4500 30JUN limited at USD 20.5 (BK5F5RDIE8);;-66.668,29;0.857;LU047050K01241000000;K0124100;;DHARMARESEARCH-DR EQUITY FUND;CC;USD;"
