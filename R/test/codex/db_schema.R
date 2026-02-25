@@ -145,7 +145,7 @@ ensure_tables_from_datasets <- function(con, datasets, cfg, provider_schema,
         DT <- datasets[[nm]]
         if (is.null(DT)) next
 
-        table <- cfg[[nm]]$db$table
+        table <- tolower(cfg[[nm]]$db$table)
         keys  <- cfg[[nm]]$db$keys
         type_overrides <- cfg[[nm]]$db$types
 

@@ -25,7 +25,7 @@ source("/home/Alexandre/PMS/R/test/codex/db_schema.R")
 source("/home/Alexandre/PMS/R/test/codex/db_upsert.R")
 
 base_dir <- Sys.getenv("PMS_BASE_DIR", "/home/Alexandre/PMS")
-provider_schema <- Sys.getenv("PMS_SCHEMA", "cfm")
+provider_schema <- tolower(Sys.getenv("PMS_SCHEMA", "cfm"))
 
 if (exists("type_overrides") && length(type_overrides) > 0) {
     for (nm in intersect(names(cfg), names(type_overrides))) {

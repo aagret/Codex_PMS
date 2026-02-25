@@ -66,12 +66,13 @@ upsert_all <- function(conn, datasets, cfg, schema) {
             cat("Skipping empty:", nm, "\n")
             next
         }
-        cat("Upserting:", nm, "->", cfg[[nm]]$db$table, "\n")
+        table <- tolower(cfg[[nm]]$db$table)
+        cat("Upserting:", nm, "->", table, "\n")
         upsert_table_pg(
             conn     = conn,
             DT       = DT,
             schema   = schema,
-            table    = cfg[[nm]]$db$table,
+            table    = table,
             key_cols = cfg[[nm]]$db$keys
         )
     }
