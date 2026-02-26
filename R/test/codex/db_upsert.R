@@ -2,9 +2,18 @@ library(DBI)
 library(RPostgres)
 library(data.table)
 
-upsert_table_pg <- function(conn, DT, table, key_cols, schema = "public", temp_prefix = "stg_") {
+upsert_table_pg <- function(conn, DT, table, key_cols, schema = "public", temp_prefix = "stg_", dedupe_cols = NULL) {
     stopifnot(data.table::is.data.table(DT))
     if (nrow(DT) == 0L) return(invisible(TRUE))
+
+    if (!is.null(dedupe_cols)) {
+        dedupe_cols <- intersect(dedupe_cols, names(DT))
+        if (length(dedupe_cols) > 0L) {
+            DT <- DT[!duplicated(DT[, ..dedupe_cols])]
+        } else {
+            warning("Dedupe columns not found in DT for table: ", table)
+        }
+    }
 
     if ("id" %in% names(DT)) {
         DT[, id := NULL]
@@ -68,12 +77,14 @@ upsert_all <- function(conn, datasets, cfg, schema) {
         }
         table <- tolower(cfg[[nm]]$db$table)
         cat("Upserting:", nm, "->", table, "\n")
+        dedupe_cols <- cfg[[nm]]$db$dedupe_keys
         upsert_table_pg(
             conn     = conn,
             DT       = DT,
             schema   = schema,
             table    = table,
-            key_cols = cfg[[nm]]$db$keys
+            key_cols = cfg[[nm]]$db$keys,
+            dedupe_cols = dedupe_cols
         )
     }
     invisible(TRUE)
