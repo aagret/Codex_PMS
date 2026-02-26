@@ -93,6 +93,39 @@ load_cfm_file <- function(target_dir, pattern, cols_raw,
         DT[, (char_cols) := lapply(.SD, iconv, from = "latin1", to = "UTF-8", sub = ""), .SDcols = char_cols]
     }
 
+    normalize_numeric_cols <- function(dt) {
+        char_cols <- names(dt)[vapply(dt, is.character, logical(1))]
+        if (length(char_cols) == 0L) return(invisible(dt))
+
+        re_comma <- "^[-+]?[0-9]{1,3}(\\.[0-9]{3})*,[0-9]+$|^[-+]?[0-9]+,[0-9]+$"
+        re_plain <- "^[-+]?[0-9]+$"
+        re_dot <- "^[-+]?[0-9]+\\.[0-9]+$"
+
+        for (col in char_cols) {
+            x <- trimws(as.character(dt[[col]]))
+            x[x == ""] <- NA_character_
+            nz <- x[!is.na(x)]
+            if (length(nz) == 0L) next
+            if (!any(grepl(",", nz, fixed = TRUE))) next
+            if (any(grepl("[A-Za-z]", nz))) next
+
+            is_comma <- grepl(re_comma, nz)
+            is_plain <- grepl(re_plain, nz)
+            is_dot <- grepl(re_dot, nz)
+
+            if (any(is_dot)) next
+            if (!all(is_comma | is_plain)) next
+
+            y <- gsub("\\.", "", x)
+            y <- gsub(",", ".", y, fixed = TRUE)
+            dt[[col]] <- suppressWarnings(as.numeric(y))
+        }
+
+        invisible(dt)
+    }
+
+    normalize_numeric_cols(DT)
+
     drop_trailing_na_cols(DT)
 
     if (length(date_cols) > 0L) convert_dates(DT, date_cols)

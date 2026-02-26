@@ -1,31 +1,6 @@
 library(data.table)
 
-# EDR loader helpers
-
-drop_trailing_na_cols <- function(dt) {
-    stopifnot(data.table::is.data.table(dt))
-    if (nrow(dt) == 0L || ncol(dt) == 0L) return(invisible(dt))
-
-    is_all_na <- colSums(!is.na(dt)) == 0
-    r <- rle(is_all_na)
-
-    if (length(r$values) > 0L && tail(r$values, 1L)) {
-        n_drop <- tail(r$lengths, 1L)
-        dt[, tail(names(dt), n_drop) := NULL]
-    }
-
-    invisible(dt)
-}
-
-extract_date_from_filename_regex <- function(file, regex, fmt) {
-    m <- regexec(regex, basename(file))
-    parts <- regmatches(basename(file), m)
-    if (length(parts) == 0L || length(parts[[1]]) < 2L) return(as.Date(NA))
-    as.Date(parts[[1]][2L], format = fmt)
-}
-
-convert_dates <- function(dt, cols, date_formats = c("%d%m%Y", "%d.%m.%Y", "%Y%m%d", "%Y-%m-%d"),
-                          allow_excel_serial = TRUE, excel_origin = "1899-12-30") {
+convert_dates <- function(dt, cols, date_formats = c("%d.%m.%Y"), allow_excel_serial = TRUE, excel_origin = "1899-12-30") {
     stopifnot(data.table::is.data.table(dt))
 
     cols <- intersect(cols, names(dt))
@@ -40,16 +15,13 @@ convert_dates <- function(dt, cols, date_formats = c("%d%m%Y", "%d.%m.%Y", "%Y%m
         x <- trimws(as.character(x))
         x[x %in% c("", "0")] <- NA_character_
 
-        valid <- grepl("^[0-9]{7,8}$", x)
-        idx7 <- valid & nchar(x) == 7L
-        if (any(idx7)) x[idx7] <- sprintf("%08d", as.integer(x[idx7]))
-
         out <- rep(as.Date(NA), length(x))
         for (fmt in date_formats) {
             parsed <- as.Date(x, format = fmt)
             mask <- is.na(out) & !is.na(parsed)
             if (any(mask)) out[mask] <- parsed[mask]
         }
+
         if (isTRUE(allow_excel_serial)) {
             num_like <- grepl("^[0-9]{5,6}$", x)
             if (any(num_like)) {
@@ -59,20 +31,29 @@ convert_dates <- function(dt, cols, date_formats = c("%d%m%Y", "%d.%m.%Y", "%Y%m
                 if (any(mask)) out[mask] <- parsed_serial[mask]
             }
         }
+
         out
     }), .SDcols = cols]
 
     invisible(dt)
 }
 
-load_edr_file <- function(target_dir, pattern, cols_raw,
-                          date_cols = character(),
-                          add_filename_date = FALSE,
-                          filename_date_col = "as_of_date",
-                          filename_date_fmt = "%Y%m%d",
-                          filename_date_regex = NULL,
-                          sep = ";",
-                          date_formats = NULL) {
+extract_date_from_filename_regex <- function(file, regex, fmt) {
+    m <- regexec(regex, basename(file))
+    parts <- regmatches(basename(file), m)
+    if (length(parts) == 0L || length(parts[[1]]) < 2L) return(as.Date(NA))
+    as.Date(parts[[1]][2L], format = fmt)
+}
+
+load_quintet_file <- function(target_dir, pattern, cols_raw,
+                              cols_raw_src = NULL,
+                              date_cols = character(),
+                              add_filename_date = FALSE,
+                              filename_date_col = "as_of_date",
+                              filename_date_fmt = "%Y-%m-%d",
+                              filename_date_regex = NULL,
+                              sep = ";",
+                              date_formats = c("%d.%m.%Y")) {
 
     files <- list.files(target_dir, pattern = pattern, full.names = TRUE)
 
@@ -112,11 +93,11 @@ load_edr_file <- function(target_dir, pattern, cols_raw,
         for (i in (actual_n + 1L):expected_n) DT[, (i) := NA]
     }
 
-    setnames(DT, cols_expected)
-
-    char_cols <- names(DT)[vapply(DT, is.character, logical(1))]
-    if (length(char_cols) > 0L) {
-        DT[, (char_cols) := lapply(.SD, iconv, from = "latin1", to = "UTF-8", sub = ""), .SDcols = char_cols]
+    if (!is.null(cols_raw_src)) {
+        setnames(DT, cols_raw_src)
+        setnames(DT, cols_raw_src, cols_raw)
+    } else {
+        setnames(DT, cols_expected)
     }
 
     normalize_numeric_cols <- function(dt) {
@@ -152,36 +133,33 @@ load_edr_file <- function(target_dir, pattern, cols_raw,
 
     normalize_numeric_cols(DT)
 
-    drop_trailing_na_cols(DT)
-
-    if (length(date_cols) > 0L) {
-        if (is.null(date_formats)) {
-            convert_dates(DT, date_cols)
-        } else {
-            convert_dates(DT, date_cols, date_formats = date_formats)
-        }
+    if (identical(date_cols, "AUTO_DATE_COLS")) {
+        date_cols <- names(DT)[grepl("date", names(DT), ignore.case = TRUE)]
     }
+
+    if (length(date_cols) > 0L) convert_dates(DT, date_cols, date_formats = date_formats)
 
     DT
 }
 
-build_edr_datasets <- function(cfg, base_dir) {
+build_quintet_datasets <- function(cfg, base_dir) {
     stopifnot(is.list(cfg))
 
-    target_dir <- file.path(base_dir, "rawData", "edr")
+    target_dir <- file.path(base_dir, "rawData", "quintet")
 
     lapply(cfg, function(x) {
-        load_edr_file(
-            target_dir         = target_dir,
-            pattern            = x$file$pattern,
-            cols_raw           = x$file$cols_raw,
-            date_cols          = x$file$date_cols,
-            add_filename_date  = isTRUE(x$file$add_filename_date),
-            filename_date_col  = if (!is.null(x$file$filename_date_col)) x$file$filename_date_col else "as_of_date",
-            filename_date_fmt  = if (!is.null(x$file$filename_date_fmt)) x$file$filename_date_fmt else "%Y%m%d",
+        load_quintet_file(
+            target_dir          = target_dir,
+            pattern             = x$file$pattern,
+            cols_raw            = x$file$cols_raw,
+            cols_raw_src        = x$file$cols_raw_src,
+            date_cols           = x$file$date_cols,
+            add_filename_date   = isTRUE(x$file$add_filename_date),
+            filename_date_col   = if (!is.null(x$file$filename_date_col)) x$file$filename_date_col else "as_of_date",
+            filename_date_fmt   = if (!is.null(x$file$filename_date_fmt)) x$file$filename_date_fmt else "%Y-%m-%d",
             filename_date_regex = x$file$filename_date_regex,
-            sep                = if (!is.null(x$file$sep)) x$file$sep else ";",
-            date_formats       = x$file$date_formats
+            sep                 = if (!is.null(x$file$sep)) x$file$sep else ";",
+            date_formats        = if (!is.null(x$file$date_formats)) x$file$date_formats else c("%d.%m.%Y")
         )
     })
 }
